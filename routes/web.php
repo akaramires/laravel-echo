@@ -11,8 +11,20 @@
 |
 */
 
-Route::get( '/', function () {
-    \App\Events\OrderStatusUpdated::dispatch();
+class Order
+{
+    public $id;
 
+    public function __construct( $id )
+    {
+        $this->id = $id;
+    }
+}
+
+Route::get( '/', function () {
     return view( 'welcome' );
+} );
+
+Route::get( '/update', function () {
+    \App\Events\OrderStatusUpdated::dispatch( new Order( 1 ) );
 } );
