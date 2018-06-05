@@ -10,21 +10,22 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class OrderStatusUpdated implements ShouldBroadcast
+class TaskCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $order;
+    public $task;
 
     /**
-     * OrderStatusUpdated constructor.
-     * @param $order
+     * TaskCreated constructor.
+     * @param $task
      */
-    public function __construct( $order )
+    public function __construct( $task )
     {
-        $this->order = $order;
-    }
+        $this->task = $task;
 
+        $this->dontBroadcastToCurrentUser();
+    }
 
     /**
      * Get the channels the event should broadcast on.
@@ -33,6 +34,6 @@ class OrderStatusUpdated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel( 'orders' );
+        return new Channel( 'tasks' );
     }
 }
