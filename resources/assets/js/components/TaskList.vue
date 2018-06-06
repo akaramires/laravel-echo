@@ -1,35 +1,46 @@
 <template>
     <div>
         <ul class="list-group">
-            <li class="list-group-item" v-for="task in tasks" v-text="task"></li>
+            <li class="list-group-item" v-for="task in project.tasks" v-text="task.body"></li>
         </ul>
 
-        <input type="text" v-model="newTask" @blur="addTask">
+        <form class="mt-1">
+            <div class="form-group">
+                <input type="text" class="form-control" v-model="newTask" @blur="save" placeholder="Write a text...">
+                <!--<small class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+            </div>
+        </form>
     </div>
 </template>
 
 <script>
     export default {
+        props: [
+            'dataProject'
+        ],
+
         data() {
             return {
-                tasks  : [],
+                project: this.dataProject,
                 newTask: ''
             };
         },
 
         created() {
-            axios.get( '/tasks' ).then( response => this.tasks = response.data );
-
-            window.Echo.channel( 'tasks' ).listen( 'TaskCreated', ({task}) => {
-                this.tasks.push( task.body );
+            window.Echo.channel( 'tasks.' + this.project.id ).listen( 'TaskCreatedEvent', ( { task } ) => {
+                this.addTask( task );
             } );
         },
 
         methods: {
-            addTask() {
-                axios.post( '/tasks', { body: this.newTask } );
+            save() {
+                axios.post( '/api/projects/' + this.project.id + '/tasks', { body: this.newTask } )
+                    .then( response => response.data )
+                    .then( this.addTask );
+            },
 
-                this.tasks.push( this.newTask );
+            addTask( task ) {
+                this.project.tasks.push( task );
 
                 this.newTask = '';
             }

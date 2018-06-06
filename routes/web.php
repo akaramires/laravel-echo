@@ -11,28 +11,39 @@
 |
 */
 
-use App\Task;
+use App\Events\TaskCreatedEvent;
+use App\Project;
 
-class Order
-{
-    public $id;
+Route::group( [ 'middleware' => 'auth' ], function () {
+    Route::get( '/projects/{project}', function ( Project $project ) {
+        $project->load( 'tasks' );
 
-    public function __construct( $id )
-    {
-        $this->id = $id;
-    }
-}
+        return view( 'welcome', compact( 'project' ) );
+    } );
 
-Route::get( '/', function () {
-    return view( 'welcome' );
+    // API
+
+    Route::get( '/api/projects/{project}', function ( Project $project ) {
+        return $project->tasks->pluck( 'body' );
+    } );
+
+    Route::post( '/api/projects/{project}/tasks', function ( Project $project ) {
+        $task = $project->tasks()->create( request( [ 'body' ] ) );
+
+        event( new TaskCreatedEvent( $task ) );
+
+        return $task;
+    } );
+
+    //    Route::get( '/tasks', function () {
+    //        return \App\Task::latest()->pluck( 'body' );
+    //    } );
+
+    //    Route::post( '/tasks', function () {
+    //        $task = \App\Task::forceCreate( request( [ 'body' ] ) );
+    //
+    //        event( new \App\Events\TaskCreated( $task ) );
+    //    } );
 } );
 
-Route::get( '/tasks', function () {
-    return Task::latest()->pluck( 'body' );
-} );
-
-Route::post( '/tasks', function () {
-    $task = Task::forceCreate( request( [ 'body' ] ) );
-
-    event( new \App\Events\TaskCreated( $task ) );
-} );
+Auth::routes();
