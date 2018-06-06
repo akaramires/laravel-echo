@@ -27,6 +27,7 @@ class CreateProjectParticipantsTable extends Migration
         $project2 = \App\Project::whereName( 'project2' )->first();
 
         $project1->participants()->attach( $user1 );
+        $project1->participants()->attach( $user2 );
         $project2->participants()->attach( $user2 );
 
         \App\Task::create( [ 'project_id' => $project1->id, 'body' => 'Elmar\'s task.' ] );

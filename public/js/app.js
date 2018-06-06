@@ -52463,34 +52463,63 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['dataProject'],
+    props: ['data-project'],
 
     data: function data() {
         return {
             project: this.dataProject,
-            newTask: ''
+            newTask: '',
+            activePeer: false,
+            typingTimer: false
         };
     },
+
+
+    computed: {
+        channel: function channel() {
+            return window.Echo.private('tasks.' + this.project.id);
+        }
+    },
+
     created: function created() {
         var _this = this;
 
-        window.Echo.private('tasks.' + this.project.id).listen('TaskCreatedEvent', function (_ref) {
+        this.channel.listen('TaskCreatedEvent', function (_ref) {
             var task = _ref.task;
-
-            _this.addTask(task);
-        });
+            return _this.addTask(task);
+        }).listenForWhisper('typing', this.flashActivePeer);
     },
 
 
     methods: {
+        flashActivePeer: function flashActivePeer(e) {
+            var _this2 = this;
+
+            this.activePeer = e;
+
+            if (this.typingTimer) clearTimeout(this.typingTimer);
+
+            this.typingTimer = setTimeout(function () {
+                return _this2.activePeer = false;
+            }, 3000);
+        },
+        tagPeers: function tagPeers() {
+            this.channel.whisper('typing', { name: window.App.user.name });
+        },
         save: function save() {
             axios.post('/api/projects/' + this.project.id + '/tasks', { body: this.newTask }).then(function (response) {
                 return response.data;
             }).then(this.addTask);
         },
         addTask: function addTask(task) {
+            this.activePeer = false;
+
             this.project.tasks.push(task);
 
             this.newTask = '';
@@ -52507,6 +52536,8 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _c("h3", { domProps: { textContent: _vm._s(_vm.project.title) } }),
+    _vm._v(" "),
     _c(
       "ul",
       { staticClass: "list-group" },
@@ -52534,6 +52565,7 @@ var render = function() {
           domProps: { value: _vm.newTask },
           on: {
             blur: _vm.save,
+            keydown: _vm.tagPeers,
             input: function($event) {
               if ($event.target.composing) {
                 return
@@ -52541,7 +52573,16 @@ var render = function() {
               _vm.newTask = $event.target.value
             }
           }
-        })
+        }),
+        _vm._v(" "),
+        _vm.activePeer
+          ? _c("small", {
+              staticClass: "form-text text-muted",
+              domProps: {
+                textContent: _vm._s(_vm.activePeer.name + " is typing...")
+              }
+            })
+          : _vm._e()
       ])
     ])
   ])

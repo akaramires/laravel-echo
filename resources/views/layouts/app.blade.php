@@ -19,45 +19,31 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <script>
+        window.App = <?php echo json_encode( [ 'user' => auth()->user() ] ); ?>;
+    </script>
 </head>
 <body>
-<div class="container">
-    <nav class="navbar navbar-expand-lg mb-5">
-        <a class="navbar-brand" href="#">{{ config('app.name') }}</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
-                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+    <h5 class="my-0 mr-md-auto font-weight-normal">{{ config('app.name') }}</h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+        @guest
+            <a class="p-2 text-dark" href="{{ route('login') }}">{{ __('Login') }}</a>
+        @else
+            <a class="p-2 text-dark" href="#">{{ auth()->user()->name }}</a>
+            <a class="p-2 text-dark" href="{{ route('logout') }}"
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
 
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav mr-auto w-100">
-                @guest
-                    <li class="nav-item ml-auto">
-                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                    </li>
-                @else
-                    <li class="nav-item dropdown ml-auto">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
-                            {{ auth()->user()->name }}
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="{{ route('logout') }}"
-                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
-
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                  style="display: none;">
-                                @csrf
-                            </form>
-                        </div>
-                    </li>
-                @endguest
-            </ul>
-        </div>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                  style="display: none;">
+                @csrf
+            </form>
+        @endguest
     </nav>
+    @guest
+        <a class="btn btn-outline-primary" href="{{ route('register') }}">{{ __('Register') }}</a>
+    @endguest
 </div>
 
 <div class="container">
@@ -76,7 +62,7 @@
         @yield('content')
     </main>
 
-    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+    {{--<footer class="pt-4 my-md-5 pt-md-5 border-top">
         <div class="row">
             <div class="col-12 col-md">
                 <img class="mb-2" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="24"
@@ -102,7 +88,7 @@
                 </ul>
             </div>
         </div>
-    </footer>
+    </footer>--}}
 </div>
 </body>
 </html>
