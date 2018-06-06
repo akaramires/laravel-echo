@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Project whereId( $value )
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Project whereName( $value )
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Project whereUpdatedAt( $value )
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\User[] $participants
+ * @property string $title
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Project whereTitle($value)
  */
 class Project extends Model
 {
@@ -27,5 +30,10 @@ class Project extends Model
     public function tasks()
     {
         return $this->hasMany( Task::class );
+    }
+
+    public function participants()
+    {
+        return $this->belongsToMany( User::class, 'project_participants' );
     }
 }

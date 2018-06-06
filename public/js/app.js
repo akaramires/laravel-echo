@@ -52476,7 +52476,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     created: function created() {
         var _this = this;
 
-        window.Echo.channel('tasks.' + this.project.id).listen('TaskCreatedEvent', function (_ref) {
+        window.Echo.private('tasks.' + this.project.id).listen('TaskCreatedEvent', function (_ref) {
             var task = _ref.task;
 
             _this.addTask(task);

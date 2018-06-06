@@ -16,17 +16,20 @@ class CreateProjectsTable extends Migration
         Schema::create( 'projects', function ( Blueprint $table ) {
             $table->increments( 'id' );
             $table->string( 'name' );
+            $table->string( 'title' );
             $table->timestamps();
         } );
 
         ( new \App\Project() )->insert( [
             [
-                'name'       => 'Project 1',
+                'name'       => 'project1',
+                'title'      => 'Project 1',
                 'created_at' => date( 'Y-m-d H:i:s' ),
                 'updated_at' => date( 'Y-m-d H:i:s' ),
             ],
             [
-                'name'       => 'Project 2',
+                'name'       => 'project2',
+                'title'      => 'Project 2',
                 'created_at' => date( 'Y-m-d H:i:s' ),
                 'updated_at' => date( 'Y-m-d H:i:s' ),
             ],

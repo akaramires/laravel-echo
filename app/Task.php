@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Task whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Task whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Task whereUpdatedAt($value)
+ * @property int $project_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Task whereProjectId($value)
  */
 class Task extends Model
 {
