@@ -52467,6 +52467,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['data-project'],
@@ -52475,6 +52484,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             project: this.dataProject,
             newTask: '',
+            participants: [],
             activePeer: false,
             typingTimer: false
         };
@@ -52483,14 +52493,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         channel: function channel() {
-            return window.Echo.private('tasks.' + this.project.id);
+            return window.Echo.join('tasks.' + this.project.id);
         }
     },
 
     created: function created() {
         var _this = this;
 
-        this.channel.listen('TaskCreatedEvent', function (_ref) {
+        this.channel.here(function (users) {
+            _this.participants = users;
+        }).joining(function (user) {
+            _this.participants.push(user);
+        }).leaving(function (user) {
+            _this.participants.splice(_this.participants.indexOf(user), 1);
+        }).listen('TaskCreatedEvent', function (_ref) {
             var task = _ref.task;
             return _this.addTask(task);
         }).listenForWhisper('typing', this.flashActivePeer);
@@ -52535,55 +52551,72 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h3", { domProps: { textContent: _vm._s(_vm.project.title) } }),
-    _vm._v(" "),
-    _c(
-      "ul",
-      { staticClass: "list-group" },
-      _vm._l(_vm.project.tasks, function(task) {
-        return _c("li", {
-          staticClass: "list-group-item",
-          domProps: { textContent: _vm._s(task.body) }
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-8" }, [
+      _c("h5", { domProps: { textContent: _vm._s(_vm.project.title) } }),
+      _vm._v(" "),
+      _c(
+        "ul",
+        { staticClass: "list-group" },
+        _vm._l(_vm.project.tasks, function(task) {
+          return _c("li", {
+            staticClass: "list-group-item",
+            domProps: { textContent: _vm._s(task.body) }
+          })
         })
-      })
-    ),
-    _vm._v(" "),
-    _c("form", { staticClass: "mt-1" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.newTask,
-              expression: "newTask"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: { type: "text", placeholder: "Write a text..." },
-          domProps: { value: _vm.newTask },
-          on: {
-            blur: _vm.save,
-            keydown: _vm.tagPeers,
-            input: function($event) {
-              if ($event.target.composing) {
-                return
+      ),
+      _vm._v(" "),
+      _c("form", { staticClass: "mt-1" }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.newTask,
+                expression: "newTask"
               }
-              _vm.newTask = $event.target.value
-            }
-          }
-        }),
-        _vm._v(" "),
-        _vm.activePeer
-          ? _c("small", {
-              staticClass: "form-text text-muted",
-              domProps: {
-                textContent: _vm._s(_vm.activePeer.name + " is typing...")
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text", placeholder: "Write a text..." },
+            domProps: { value: _vm.newTask },
+            on: {
+              blur: _vm.save,
+              keydown: _vm.tagPeers,
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.newTask = $event.target.value
               }
-            })
-          : _vm._e()
+            }
+          }),
+          _vm._v(" "),
+          _vm.activePeer
+            ? _c("small", {
+                staticClass: "form-text text-muted",
+                domProps: {
+                  textContent: _vm._s(_vm.activePeer.name + " is typing...")
+                }
+              })
+            : _vm._e()
+        ])
       ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-4" }, [
+      _c("h5", [_vm._v("Active Participants")]),
+      _vm._v(" "),
+      _c(
+        "ul",
+        { staticClass: "list-group" },
+        _vm._l(_vm.participants, function(participant) {
+          return _c("li", {
+            staticClass: "list-group-item",
+            domProps: { textContent: _vm._s(participant.name) }
+          })
+        })
+      )
     ])
   ])
 }

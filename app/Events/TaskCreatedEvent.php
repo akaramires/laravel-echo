@@ -34,6 +34,6 @@ class TaskCreatedEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel( 'tasks.' . $this->task->project_id );
+        return new PresenceChannel( 'tasks.' . $this->task->project_id );
     }
 }
