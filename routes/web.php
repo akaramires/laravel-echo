@@ -11,31 +11,14 @@
 |
 */
 
-use App\Events\MessageCreatedEvent;
-use App\Chat;
-
 Auth::routes();
 
 Route::group( [ 'middleware' => [ 'auth' ] ], function () {
     Route::group( [ 'middleware' => [ 'chat_access' ] ], function () {
-        Route::get( '/chats/{chat}', function ( Chat $chat ) {
-            $chat->load( 'messages' );
+        Route::get( '/chats/{chat}', 'ChatController@view' );
 
-            return view( 'chats.single', compact( 'chat' ) );
-        } );
-
-        // API
-        Route::get( '/api/chats/{chat}', function ( Chat $chat ) {
-            return $chat->messages->pluck( 'body' );
-        } );
-
-        Route::post( '/api/chats/{chat}/messages', function ( Chat $chat ) {
-            $message = $chat->messages()->create( request( [ 'body' ] ) );
-
-            event( new MessageCreatedEvent( $message ) );
-
-            return $message;
-        } );
+        Route::get( '/api/chats/{chat}', 'Api\ChatsController@show' );
+        Route::post( '/api/chats/{chat}/messages', 'Api\ChatsController@messages' );
     } );
 
     Route::get( '/', 'HomeController@index' );

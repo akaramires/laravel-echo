@@ -52487,7 +52487,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             chat: this.dataChat,
-            newMessage: '',
+            message: '',
             participants: [],
             chats: [],
             activePeer: false,
@@ -52506,13 +52506,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var _this = this;
 
         this.channel.here(function (data) {
-            if (data.length) {
-                for (var i in data) {
-                    if (!data.hasOwnProperty(i)) continue;
-
-                    _this.participants.push(data[i].user);
-                }
-            }
+            _this.participants = data;
         }).joining(function (data) {
             _this.participants.push(data.user);
         }).leaving(function (data) {
@@ -52530,21 +52524,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.activePeer = e;
 
-            if (this.typingTimer) clearTimeout(this.typingTimer);
+            if (this.typingTimer) {
+                clearTimeout(this.typingTimer);
+            }
 
             this.typingTimer = setTimeout(function () {
                 return _this2.activePeer = false;
             }, 3000);
         },
-        tagPeers: function tagPeers(e) {
+        typeMessage: function typeMessage(e) {
             if (e.keyCode == 13) {
-                this.save();
+                this.saveMessage();
             }
 
             this.channel.whisper('typing', { name: window.App.user.name });
         },
-        save: function save() {
-            axios.post('/api/chats/' + this.chat.id + '/messages', { body: this.newMessage }).then(function (response) {
+        saveMessage: function saveMessage() {
+            axios.post('/api/chats/' + this.chat.id + '/messages', { body: this.message }).then(function (response) {
                 return response.data;
             }).then(this.addMessage);
         },
@@ -52553,7 +52549,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.chat.messages.push(message);
 
-            this.newMessage = '';
+            this.message = '';
         }
     }
 });
@@ -52567,7 +52563,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-9" }, [
+    _c("div", { staticClass: "col-8" }, [
       _c("h5", { domProps: { textContent: _vm._s(_vm.chat.title) } }),
       _vm._v(" "),
       _c(
@@ -52595,20 +52591,20 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.newMessage,
-                expression: "newMessage"
+                value: _vm.message,
+                expression: "message"
               }
             ],
             staticClass: "form-control",
             attrs: { type: "text", placeholder: "Write a text..." },
-            domProps: { value: _vm.newMessage },
+            domProps: { value: _vm.message },
             on: {
-              keydown: _vm.tagPeers,
+              keydown: _vm.typeMessage,
               input: function($event) {
                 if ($event.target.composing) {
                   return
                 }
-                _vm.newMessage = $event.target.value
+                _vm.message = $event.target.value
               }
             }
           }),
@@ -52625,8 +52621,8 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "col-3" }, [
-      _c("h5", [_vm._v("Active Participants")]),
+    _c("div", { staticClass: "col-4" }, [
+      _c("h5", [_vm._v("Participants")]),
       _vm._v(" "),
       _c(
         "ul",

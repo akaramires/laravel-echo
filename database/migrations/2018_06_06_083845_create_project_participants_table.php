@@ -23,15 +23,15 @@ class CreateProjectParticipantsTable extends Migration
         $user1 = \App\User::whereEmail( 'e.abdurayimov@gmail.com' )->first();
         $user2 = \App\User::whereEmail( 'johndoe@gmail.com' )->first();
 
-        $chat1 = \App\Chat::whereName( 'chat1' )->first();
-        $chat2 = \App\Chat::whereName( 'chat2' )->first();
+        $chat1 = \App\Models\Chat::whereName( 'chat1' )->first();
+        $chat2 = \App\Models\Chat::whereName( 'chat2' )->first();
 
         $chat1->participants()->attach( $user1 );
         $chat1->participants()->attach( $user2 );
         $chat2->participants()->attach( $user2 );
 
-        \App\Message::create( [ 'chat_id' => $chat1->id, 'body' => 'Elmar\'s message.' ] );
-        \App\Message::create( [ 'chat_id' => $chat2->id, 'body' => 'John\'s message.' ] );
+        \App\Models\Message::create( [ 'chat_id' => $chat1->id, 'body' => 'Elmar\'s message.' ] );
+        \App\Models\Message::create( [ 'chat_id' => $chat2->id, 'body' => 'John\'s message.' ] );
     }
 
     /**

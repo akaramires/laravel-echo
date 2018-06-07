@@ -11,14 +11,10 @@
 |
 */
 
-Broadcast::channel( 'messages.{chat}', function ( \App\User $user, \App\Chat $chat ) {
+Broadcast::channel( 'messages.{chat}', function ( \App\User $user, \App\Models\Chat $chat ) {
     if ( $chat->participants->contains( $user ) ) {
         return [
-            'user'  => [
-                'id'   => $user->id,
-                'name' => $user->name,
-            ],
-            'chats' => $user->chats,
+            'name' => $user->name,
         ];
     }
 } );

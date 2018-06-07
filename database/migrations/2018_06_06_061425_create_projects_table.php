@@ -20,7 +20,7 @@ class CreateProjectsTable extends Migration
             $table->timestamps();
         } );
 
-        ( new \App\Chat() )->insert( [
+        ( new \App\Models\Chat() )->insert( [
             [
                 'name'       => 'chat1',
                 'title'      => 'Chat 1',

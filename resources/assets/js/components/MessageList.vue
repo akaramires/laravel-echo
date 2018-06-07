@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-9">
+        <div class="col-8">
             <h5 v-text="chat.title"></h5>
 
             <div class="chat border p-3 mb-3 rounded">
@@ -12,7 +12,7 @@
 
             <div class="row">
                 <div class="col-12">
-                    <input type="text" class="form-control" v-model="newMessage" @keydown="tagPeers"
+                    <input type="text" class="form-control" v-model="message" @keydown="typeMessage"
                            placeholder="Write a text...">
                     <small class="form-text text-muted" v-if="activePeer"
                            v-text="activePeer.name + ' is typing...'"></small>
@@ -20,8 +20,8 @@
             </div>
         </div>
 
-        <div class="col-3">
-            <h5>Active Participants</h5>
+        <div class="col-4">
+            <h5>Participants</h5>
 
             <ul class="list-group">
                 <li class="list-group-item" v-for="participant in participants" v-text="participant.name"></li>
@@ -38,10 +38,10 @@
 
         data() {
             return {
-                chat     : this.dataChat,
-                newMessage     : '',
+                chat        : this.dataChat,
+                message     : '',
                 participants: [],
-                chats    : [],
+                chats       : [],
                 activePeer  : false,
                 typingTimer : false
             };
@@ -56,13 +56,7 @@
         created() {
             this.channel
                 .here( data => {
-                    if( data.length ) {
-                        for( var i in data ) {
-                            if( !data.hasOwnProperty( i ) ) continue;
-
-                            this.participants.push( data[ i ].user );
-                        }
-                    }
+                    this.participants = data;
                 } )
                 .joining( data => {
                     this.participants.push( data.user );
@@ -78,7 +72,9 @@
             flashActivePeer( e ) {
                 this.activePeer = e;
 
-                if( this.typingTimer ) clearTimeout( this.typingTimer );
+                if( this.typingTimer ) {
+                    clearTimeout( this.typingTimer );
+                }
 
                 this.typingTimer = setTimeout(
                     () => this.activePeer = false,
@@ -86,17 +82,16 @@
                 );
             },
 
-            tagPeers( e ) {
+            typeMessage( e ) {
                 if( e.keyCode == 13 ) {
-                    this.save();
+                    this.saveMessage();
                 }
 
-                this.channel
-                    .whisper( 'typing', { name: window.App.user.name } );
+                this.channel.whisper( 'typing', { name: window.App.user.name } );
             },
 
-            save() {
-                axios.post( '/api/chats/' + this.chat.id + '/messages', { body: this.newMessage } )
+            saveMessage() {
+                axios.post( '/api/chats/' + this.chat.id + '/messages', { body: this.message } )
                     .then( response => response.data )
                     .then( this.addMessage );
             },
@@ -106,7 +101,7 @@
 
                 this.chat.messages.push( message );
 
-                this.newMessage = '';
+                this.message = '';
             }
         }
     };
