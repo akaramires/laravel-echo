@@ -21,7 +21,7 @@ Route::group( [ 'middleware' => [ 'auth' ] ], function () {
         Route::get( '/chats/{chat}', function ( Chat $chat ) {
             $chat->load( 'messages' );
 
-            return view( 'chat', compact( 'chat' ) );
+            return view( 'chats.single', compact( 'chat' ) );
         } );
 
         // API

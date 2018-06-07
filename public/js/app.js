@@ -52480,14 +52480,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['data-chat'],
@@ -52575,22 +52567,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-3" }, [
-      _c("h5", [_vm._v("Chats")]),
-      _vm._v(" "),
-      _c(
-        "ul",
-        { staticClass: "list-group" },
-        _vm._l(_vm.chats, function(chat) {
-          return _c("li", {
-            staticClass: "list-group-item",
-            domProps: { textContent: _vm._s(chat.name) }
-          })
-        })
-      )
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "col-6" }, [
+    _c("div", { staticClass: "col-9" }, [
       _c("h5", { domProps: { textContent: _vm._s(_vm.chat.title) } }),
       _vm._v(" "),
       _c(

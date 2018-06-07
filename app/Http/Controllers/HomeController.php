@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class HomeController extends Controller
 {
     /**
@@ -23,8 +21,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $chats = auth()->user()->chats;
-
-        return view( 'home', compact( 'chats' ) );
+        return view( 'home' );
     }
 }

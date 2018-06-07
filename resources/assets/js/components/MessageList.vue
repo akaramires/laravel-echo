@@ -1,14 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-3">
-            <h5>Chats</h5>
-
-            <ul class="list-group">
-                <li class="list-group-item" v-for="chat in chats" v-text="chat.name"></li>
-            </ul>
-        </div>
-
-        <div class="col-6">
+        <div class="col-9">
             <h5 v-text="chat.title"></h5>
 
             <div class="chat border p-3 mb-3 rounded">
