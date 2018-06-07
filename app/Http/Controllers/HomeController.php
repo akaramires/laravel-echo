@@ -23,8 +23,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $projects = auth()->user()->projects;
+        $chats = auth()->user()->chats;
 
-        return view( 'home', compact( 'projects' ) );
+        return view( 'home', compact( 'chats' ) );
     }
 }

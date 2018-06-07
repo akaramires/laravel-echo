@@ -2,7 +2,7 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\ProjectAccessMiddleware;
+use App\Http\Middleware\ChatAccessMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -61,6 +61,6 @@ class Kernel extends HttpKernel
         'signed'        => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle'      => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 
-        'project_access' => ProjectAccessMiddleware::class,
+        'chat_access' => ChatAccessMiddleware::class,
     ];
 }

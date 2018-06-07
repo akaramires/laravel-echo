@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class ProjectAccessMiddleware
+class ChatAccessMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,9 +15,9 @@ class ProjectAccessMiddleware
      */
     public function handle( $request, Closure $next )
     {
-        $project = $request->route( 'project' );
+        $chat = $request->route( 'chat' );
 
-        if ( !$project->participants->contains( auth()->user() ) ) {
+        if ( !$chat->participants->contains( auth()->user() ) ) {
             return redirect( '/' );
         }
 

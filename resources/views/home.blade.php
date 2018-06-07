@@ -2,11 +2,11 @@
 
 @section('content')
     <div class="list-group">
-        @forelse($projects as $project)
-            <a href="{{ url('projects/' . $project->id) }}"
-               class="list-group-item list-group-item-action">{{ $project->title }}</a>
+        @forelse($chats as $chat)
+            <a href="{{ url('chats/' . $chat->id) }}"
+               class="list-group-item list-group-item-action">{{ $chat->title }}</a>
         @empty
-            <a href="#" class="list-group-item list-group-item-action disabled">No project found</a>
+            <a href="#" class="list-group-item list-group-item-action disabled">No chats found</a>
         @endforelse
     </div>
 @stop

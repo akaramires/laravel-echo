@@ -13,9 +13,9 @@ class CreateTasksTable extends Migration
      */
     public function up()
     {
-        Schema::create( 'tasks', function ( Blueprint $table ) {
+        Schema::create( 'messages', function ( Blueprint $table ) {
             $table->increments( 'id' );
-            $table->unsignedInteger( 'project_id' );
+            $table->unsignedInteger( 'chat_id' );
             $table->text( 'body' );
             $table->timestamps();
         } );
@@ -28,6 +28,6 @@ class CreateTasksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists( 'tasks' );
+        Schema::dropIfExists( 'messages' );
     }
 }

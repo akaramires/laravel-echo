@@ -13891,7 +13891,7 @@ window.Vue = __webpack_require__(38);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('task-list', __webpack_require__(41));
+Vue.component('message-list', __webpack_require__(41));
 
 var app = new Vue({
   el: '#app'
@@ -52312,7 +52312,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/TaskList.vue"
+Component.options.__file = "resources/assets/js/components/MessageList.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -52321,9 +52321,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-4b5a210c", Component.options)
+    hotAPI.createRecord("data-v-0c5d125e", Component.options)
   } else {
-    hotAPI.reload("data-v-4b5a210c", Component.options)
+    hotAPI.reload("data-v-0c5d125e", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -52476,15 +52476,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['data-project'],
+    props: ['data-chat'],
 
     data: function data() {
         return {
-            project: this.dataProject,
-            newTask: '',
+            chat: this.dataChat,
+            newMessage: '',
             participants: [],
+            chats: [],
             activePeer: false,
             typingTimer: false
         };
@@ -52493,22 +52506,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         channel: function channel() {
-            return window.Echo.join('tasks.' + this.project.id);
+            return window.Echo.join('messages.' + this.chat.id);
         }
     },
 
     created: function created() {
         var _this = this;
 
-        this.channel.here(function (users) {
-            _this.participants = users;
-        }).joining(function (user) {
-            _this.participants.push(user);
-        }).leaving(function (user) {
-            _this.participants.splice(_this.participants.indexOf(user), 1);
-        }).listen('TaskCreatedEvent', function (_ref) {
-            var task = _ref.task;
-            return _this.addTask(task);
+        this.channel.here(function (data) {
+            if (data.length) {
+                for (var i in data) {
+                    if (!data.hasOwnProperty(i)) continue;
+
+                    _this.participants.push(data[i].user);
+                }
+            }
+        }).joining(function (data) {
+            _this.participants.push(data.user);
+        }).leaving(function (data) {
+            _this.participants.splice(_this.participants.indexOf(data.user), 1);
+        }).listen('MessageCreatedEvent', function (_ref) {
+            var message = _ref.message;
+            return _this.addMessage(message);
         }).listenForWhisper('typing', this.flashActivePeer);
     },
 
@@ -52525,20 +52544,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return _this2.activePeer = false;
             }, 3000);
         },
-        tagPeers: function tagPeers() {
+        tagPeers: function tagPeers(e) {
+            if (e.keyCode == 13) {
+                this.save();
+            }
+
             this.channel.whisper('typing', { name: window.App.user.name });
         },
         save: function save() {
-            axios.post('/api/projects/' + this.project.id + '/tasks', { body: this.newTask }).then(function (response) {
+            axios.post('/api/chats/' + this.chat.id + '/messages', { body: this.newMessage }).then(function (response) {
                 return response.data;
-            }).then(this.addTask);
+            }).then(this.addMessage);
         },
-        addTask: function addTask(task) {
+        addMessage: function addMessage(message) {
             this.activePeer = false;
 
-            this.project.tasks.push(task);
+            this.chat.messages.push(message);
 
-            this.newTask = '';
+            this.newMessage = '';
         }
     }
 });
@@ -52552,42 +52575,63 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-8" }, [
-      _c("h5", { domProps: { textContent: _vm._s(_vm.project.title) } }),
+    _c("div", { staticClass: "col-3" }, [
+      _c("h5", [_vm._v("Chats")]),
       _vm._v(" "),
       _c(
         "ul",
         { staticClass: "list-group" },
-        _vm._l(_vm.project.tasks, function(task) {
+        _vm._l(_vm.chats, function(chat) {
           return _c("li", {
             staticClass: "list-group-item",
-            domProps: { textContent: _vm._s(task.body) }
+            domProps: { textContent: _vm._s(chat.name) }
           })
+        })
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-6" }, [
+      _c("h5", { domProps: { textContent: _vm._s(_vm.chat.title) } }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "chat border p-3 mb-3 rounded" },
+        _vm._l(_vm.chat.messages, function(message) {
+          return _c("div", { staticClass: "chat-message" }, [
+            _c("p", {
+              staticClass: "chat-message-text text-left",
+              domProps: { textContent: _vm._s(message.body) }
+            }),
+            _vm._v(" "),
+            _c("p", {
+              staticClass: "chat-message-date text-muted",
+              domProps: { textContent: _vm._s(message.created_at) }
+            })
+          ])
         })
       ),
       _vm._v(" "),
-      _c("form", { staticClass: "mt-1" }, [
-        _c("div", { staticClass: "form-group" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-12" }, [
           _c("input", {
             directives: [
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.newTask,
-                expression: "newTask"
+                value: _vm.newMessage,
+                expression: "newMessage"
               }
             ],
             staticClass: "form-control",
             attrs: { type: "text", placeholder: "Write a text..." },
-            domProps: { value: _vm.newTask },
+            domProps: { value: _vm.newMessage },
             on: {
-              blur: _vm.save,
               keydown: _vm.tagPeers,
               input: function($event) {
                 if ($event.target.composing) {
                   return
                 }
-                _vm.newTask = $event.target.value
+                _vm.newMessage = $event.target.value
               }
             }
           }),
@@ -52604,7 +52648,7 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "col-4" }, [
+    _c("div", { staticClass: "col-3" }, [
       _c("h5", [_vm._v("Active Participants")]),
       _vm._v(" "),
       _c(
@@ -52626,7 +52670,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-4b5a210c", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-0c5d125e", module.exports)
   }
 }
 

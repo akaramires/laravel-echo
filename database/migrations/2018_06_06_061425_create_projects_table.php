@@ -13,23 +13,23 @@ class CreateProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create( 'projects', function ( Blueprint $table ) {
+        Schema::create( 'chats', function ( Blueprint $table ) {
             $table->increments( 'id' );
             $table->string( 'name' );
             $table->string( 'title' );
             $table->timestamps();
         } );
 
-        ( new \App\Project() )->insert( [
+        ( new \App\Chat() )->insert( [
             [
-                'name'       => 'project1',
-                'title'      => 'Project 1',
+                'name'       => 'chat1',
+                'title'      => 'Chat 1',
                 'created_at' => date( 'Y-m-d H:i:s' ),
                 'updated_at' => date( 'Y-m-d H:i:s' ),
             ],
             [
-                'name'       => 'project2',
-                'title'      => 'Project 2',
+                'name'       => 'chat2',
+                'title'      => 'Chat 2',
                 'created_at' => date( 'Y-m-d H:i:s' ),
                 'updated_at' => date( 'Y-m-d H:i:s' ),
             ],
@@ -43,6 +43,6 @@ class CreateProjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists( 'projects' );
+        Schema::dropIfExists( 'chats' );
     }
 }

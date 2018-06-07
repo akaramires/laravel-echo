@@ -4,20 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
-    <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
 
-    <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <script>
@@ -25,8 +18,8 @@
     </script>
 </head>
 <body>
-<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-    <h5 class="my-0 mr-md-auto font-weight-normal">{{ config('app.name') }}</h5>
+<nav class="nav-main d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+    <a href="{{ url('/') }}" class="my-0 mr-md-auto font-weight-normal nav-main-brand">{{ config('app.name') }}</a>
     <nav class="my-2 my-md-0 mr-md-3">
         @guest
             <a class="p-2 text-dark" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -44,7 +37,7 @@
     @guest
         <a class="btn btn-outline-primary" href="{{ route('register') }}">{{ __('Register') }}</a>
     @endguest
-</div>
+</nav>
 
 <div class="container">
     {{--@auth
@@ -90,5 +83,7 @@
         </div>
     </footer>--}}
 </div>
+
+<script src="{{ asset('js/app.js') }}" defer></script>
 </body>
 </html>

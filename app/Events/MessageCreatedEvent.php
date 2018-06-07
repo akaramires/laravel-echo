@@ -10,19 +10,19 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class TaskCreatedEvent implements ShouldBroadcast
+class MessageCreatedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $task;
+    public $message;
 
     /**
-     * TaskCreated constructor.
-     * @param $task
+     * MessageCreatedEvent constructor.
+     * @param $message
      */
-    public function __construct( $task )
+    public function __construct( $message )
     {
-        $this->task = $task;
+        $this->message = $message;
 
         $this->dontBroadcastToCurrentUser();
     }
@@ -34,6 +34,6 @@ class TaskCreatedEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PresenceChannel( 'tasks.' . $this->task->project_id );
+        return new PresenceChannel( 'messages.' . $this->message->chat_id );
     }
 }

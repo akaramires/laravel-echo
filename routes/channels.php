@@ -11,8 +11,14 @@
 |
 */
 
-Broadcast::channel( 'tasks.{project}', function ( $user, \App\Project $project ) {
-    if ( $project->participants->contains( $user ) ) {
-        return [ 'name' => $user->name ];
+Broadcast::channel( 'messages.{chat}', function ( \App\User $user, \App\Chat $chat ) {
+    if ( $chat->participants->contains( $user ) ) {
+        return [
+            'user'  => [
+                'id'   => $user->id,
+                'name' => $user->name,
+            ],
+            'chats' => $user->chats,
+        ];
     }
 } );

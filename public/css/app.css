@@ -10434,3 +10434,31 @@ body {
   background-color: #fff;
 }
 
+.chat .chat-message {
+  margin: 12px 0;
+}
+
+.chat .chat-message p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.chat .chat-message p.chat-message-date {
+  font-size: 12px;
+}
+
+.nav-main-brand {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-transform: uppercase;
+}
+
+.nav-main-brand:hover,
+.nav-main-brand:active,
+.nav-main-brand:focus {
+  text-decoration: none;
+  color: #212529;
+}
+
